@@ -1,0 +1,29 @@
+{
+	"name": "incodingplus-parents-guide",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/adapter-vercel": "^2.1.1",
+		"@sveltejs/kit": "^1.8.5",
+		"@types/pg": "^8.6.6",
+		"sass": "^1.58.3",
+		"svelte": "^3.55.1",
+		"svelte-check": "^3.0.4",
+		"svelte-preprocess": "^5.0.1",
+		"tslib": "^2.5.0",
+		"typescript": "^4.9.5",
+		"vite": "^4.1.4"
+	},
+	"type": "module",
+	"dependencies": {
+		"pg": "^8.9.0"
+	}
+}
