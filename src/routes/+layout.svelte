@@ -19,6 +19,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        overflow-y: auto;
+        height: 100vh;
         .title{
             padding-top:2em;
             padding-bottom:5em;
@@ -27,10 +29,11 @@
         .logo-container{
             display: flex;
             align-items: center;
+            margin-bottom: 5em;
             .logo{
                 display: inline-block;
-                width:20vw;
-                height: 20vw;
+                width:10em;
+                height: 10em;
                 background-image: url("/svelte-logo.svg");
             }
             .logo-title{

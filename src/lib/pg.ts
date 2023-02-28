@@ -9,7 +9,7 @@ const pool = new pg.Pool({
     port:Number(import.meta.env.VITE_DB_PORT ?? process.env.VITE_DB_PORT),
 });
 
-interface iHome{
+export interface iHome{
     아이디: string;
     학생이름: string;
     수업명: string;
