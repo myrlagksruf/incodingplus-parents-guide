@@ -4,15 +4,18 @@
     export let data:PageData;
     let del:[string, string][] = [];
     data.datas.sort((a, b) => {
-        let x = data.parse.find(v => v[0] === a.user_id) as string[];
-        let y = data.parse.find(v => v[0] === b.user_id) as string[];
+        let x = data.parse.find(v => v[0] === a.user_id) ?? ['all', '모든 학생'] as string[];
+        let y = data.parse.find(v => v[0] === b.user_id) ?? ['all', '모든 학생'] as string[];
         return x[1].localeCompare(y[1])
     });
     const add = () => {
-        if(data.datas.some(v => v.user_id === 'default')) return;
+        if(!(data.datas.at(-1)?.subject && data.datas.at(-1)?.course && data.datas.at(-1)?.homework)) {
+            alert('과목, 코스, 숙제 부분을 채워주세요.');
+            return;
+        }
         data.datas = [...data.datas, {
             id:'',
-            user_id:'default',
+            user_id:'all',
             subject:'',
             course:'',
             homework:'',
@@ -21,7 +24,11 @@
     }
 
     const setAll = async () => {
-        if(data.datas.some(v => v.user_id === 'default')) return;
+        if(!browser) return;
+        if(!(data.datas.at(-1)?.subject && data.datas.at(-1)?.course && data.datas.at(-1)?.homework)) {
+            alert('과목, 코스, 숙제 부분을 채워주세요.');
+            return;
+        }
         try{
             const res = await fetch(location.href, {
                 method:'POST',
@@ -38,11 +45,19 @@
 </script>
 <table>
     <tbody>
-        {#each data.datas as info,ind}
+        <tr>
+            <th>학생 이름</th>
+            <th>과목</th>
+            <th>코스</th>
+            <th>숙제</th>
+            <th>보기</th>
+            <th>삭제</th>
+        </tr>
+        {#each data.datas as info,ind (info)}
            <tr data-id={info.id} class={del.find(v => v[0] === info.id) ? 'yes' : 'no'}>
                 <td>
-                    <select bind:value={info.user_id}>
-                        <option value="default" hidden>이름을 선택해주세요</option>
+                    <select disabled={!!info.id} bind:value={info.user_id}>
+                        <option value="all">모든 학생</option>
                         {#each data.parse as v}
                             <option value={v[0]}>{v[1]}</option>
                         {/each}
@@ -59,8 +74,9 @@
                                 data.datas = [...data.datas.slice(0, ind), ...data.datas.slice(ind + 1)];
                                 return;
                             }
-                            if(del.find(v => v[0] === info.id)){
-                                del = [...del.slice(0, ind), ...del.slice(ind + 1)];
+                            let ind2 = del.findIndex(v => v[0] === info.id)
+                            if(ind2 !== -1){
+                                del = [...del.slice(0, ind2), ...del.slice(ind2 + 1)];
                             } else {
                                 del = [...del, [info.id, info.user_id]];
                             }
@@ -81,6 +97,9 @@
     table{
         border-collapse: collapse;
         tr{
+            td{
+                text-align: center;
+            }
             &.button{
                 button{
                     box-sizing: border-box;

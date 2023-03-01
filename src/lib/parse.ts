@@ -18,7 +18,10 @@ export class OrderClass{
         'JS Basic':3,
         'JS Intermediate':4,
         '진법' : 1,
-        '경우의 수': 2
+        '경우의 수': 2,
+        '파이썬 입문':1,
+        '파이썬 반복문':2,
+        '파이썬':3,
     }
 
     private static _homeworkOrder:{[key:string]:{i:number,p?:number,n?:number;o?:number}} = json;
@@ -64,7 +67,7 @@ export const parse = (obj: iHome) => {
                 return defaultFunc(obj);
             }
         ], [
-            /^\[(HTML\/CSS|JS 따라해보기|JS Basic|JS Intermediate|JS Level Up|JS Advanced)/, obj => {
+            /^\[(HTML\/CSS|JS 따라해보기|JS Basic|JS Intermediate|JS Level Up|JS Advanced|파이썬)/, obj => {
                 const arr = defaultFunc(obj);
                 arr[0] = '코딩';
                 let index = OrderClass.getHomeworkOrder(obj.수업명);

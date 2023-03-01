@@ -1,5 +1,13 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-vercel';
 import preprocess from 'svelte-preprocess';
+import fs from 'fs';
+/** @type {string[]} */
+let entries = [];
+if(process.env.NODE_ENV === 'production'){
+	let file = fs.readFileSync('./src/lib/data.json', {encoding:'utf-8'});
+	entries = JSON.parse(file).map(v => `/${v[0]}`);
+	console.log(entries);
+}
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -7,11 +15,10 @@ const config = {
 	kit: {
 		adapter: adapter({runtime:'nodejs18.x'}),
 		prerender:{
-			crawl:true,
-			entries:[
-				"/5a81fb60-0832-4f56-9aa8-72788c85983b"
-			]
-		}
+			crawl:false,
+			entries,
+		},
+
 	},
 };
 

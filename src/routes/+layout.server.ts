@@ -3,7 +3,7 @@ import parse from '$lib/data.json';
 
 const YM = import.meta.env.VITE_YM ?? process.env.VITE_YM;
 export const prerender = false;
-export const ssr = false;
+export const ssr = true;
 const y = YM.match(/^\d+/)?.[0] ?? '2023';
 const m = YM.match(/\d+$/)?.[0] ?? '0';
 

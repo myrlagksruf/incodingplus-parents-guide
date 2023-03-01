@@ -27,6 +27,7 @@
             padding-top:4em;
             padding-bottom:5em;
             display: inline-block;
+            user-select: none;
             .name{
                 padding-top:0.3em;
             }
@@ -40,10 +41,13 @@
                 width:10em;
                 height: 10em;
                 background-image: url("/svelte-logo.svg");
+                background-repeat: no-repeat;
+                background-position: center;
             }
             .logo-title{
                 font-size:2em;
                 font-weight: 900;
+                user-select: none;
                 color:rgb(75, 130, 195);
             }
         }
@@ -51,7 +55,7 @@
         box-sizing: border-box;
         max-width: 1000px;
         margin:auto;
-        background-color: ghostwhite;
+        background-color: white;
         h1{
             margin:0;
             font-size:4rem;

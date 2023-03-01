@@ -59,6 +59,7 @@ export const getInfo = async (id:string):Promise<{
             sc2.name like '[%' and ss2.id='${id}'
         order by sc2.registered_at asc
         `);
+        client.release();
         return {
             status:true,
             res

@@ -1,11 +1,12 @@
 <script lang="ts">
+
     import { parse, OrderClass } from "$lib/parse";
     import { name } from "$lib/store";
     import type { PageData } from "./$types";
 
     export let data:PageData
     const map:{[key:string]:{[key:string]:string[]}} = {};
-    $name = data.info[0].학생이름;
+    $name = (data.info[0].학생이름 ?? '').match(/^[가-힣]+/)?.[0] ?? '';
     for(let i of data.info){
         const arr = parse(i);
         let check = data.datas.find(v => 
@@ -45,7 +46,7 @@
     <div class="grid">
         <div class="title">수업 현황</div>
         {#each Object.entries(map).sort((a, b) => OrderClass.getSubjectOrder(a[0]) - OrderClass.getSubjectOrder(b[0])) as [과목명, 과목]}
-            <div class="subject" style="grid-row:span {Object.values(과목).reduce((a, v) => a + v.length, 0)}">
+            <div class="subject" style="grid-row:span {Object.values(과목).reduce((a, v) => a + v.length + 1, -1)}">
                 {@html 과목명}
             </div>
             {#each Object.entries(과목).sort((a, b) => {
@@ -59,12 +60,12 @@
                 <div class="course" style="grid-row:span {숙제들.length}">
                     {@html 수업명}
                 </div>
-                {#each 숙제들 as 숙제,ind}
-                    <div class="homework{ind === 숙제들.length - 1 ? ' last' : ''}">{@html 숙제}</div>
+                {#each 숙제들 as 숙제}
+                    <div class="homework">{@html 숙제}</div>
                 {/each}
+                <div class="last"></div>
             {/each}
         {/each}
-        <div class="last-thing"></div>
     </div>
 </main>
 <style lang="scss">
@@ -77,6 +78,7 @@
             grid-column: span 3;
             font-size:2em;
             padding-bottom: 1em;
+            user-select: none;
         }
         .subject{
             font-size: 1.25em;
@@ -89,11 +91,17 @@
             font-size: 0.9em;
             color:rgb(100, 130, 150);
         }
-        .last-thing{
-            grid-column: span 3;
-        }
-        .last:has(+ .subject, + .last-thing){
-            padding-bottom: 3em;
+        .last{
+            grid-column: span 2;
+            &:has(+ .subject){
+                grid-column: span 3;
+                margin: 1.5em 0;
+                border-bottom: 3px solid #ddd;
+            }
+            &:last-child{
+                grid-column: span 3;
+                margin-bottom: 3em;
+            }
         }
     }
 </style>

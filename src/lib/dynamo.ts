@@ -36,7 +36,7 @@ export class Dynamo{
         });
         if(id){
             command = new ExecuteStatementCommand({
-                Statement:`select * from "incodingplus-parent" where "user_id" = ?`,
+                Statement:`select * from "incodingplus-parent" where "user_id" = ? or "user_id"='all'`,
                 Parameters:[
                     { S : String(id) }
                 ]
@@ -58,7 +58,6 @@ export class Dynamo{
         const client = this.getClient;
         let inserts = objs.filter(v => !v.id);
         let updates = objs.filter(v => v.id && !(del.find(t => t[0] === v.id)));
-        console.log(inserts, updates, del);
         const command = new BatchExecuteStatementCommand({
             Statements:[
                 ...(inserts.map(v => ({
