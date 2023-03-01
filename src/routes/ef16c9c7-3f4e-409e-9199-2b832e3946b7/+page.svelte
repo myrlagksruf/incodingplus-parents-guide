@@ -2,6 +2,7 @@
     import { browser } from "$app/environment";
     import type { PageData } from "./$types";
     import datas from '$lib/data.json';
+    import { onMount } from "svelte";
     export let data:PageData;
     let del:[string, string][] = [];
     datas.sort((a, b) => a[1].localeCompare(b[1]));
@@ -9,6 +10,24 @@
         let x = data.parse.find(v => v[0] === a.user_id) ?? ['all', '모든 학생'] as string[];
         let y = data.parse.find(v => v[0] === b.user_id) ?? ['all', '모든 학생'] as string[];
         return x[1].localeCompare(y[1])
+    });
+    let text = '';
+    const check = () => setTimeout(async () => {
+        if(browser){
+            const res = await fetch('/vercel');
+            if(res.status === 200){
+                let obj = await res.json();
+                text = obj.state;
+                if(text !== 'READY'){
+                    check();
+                }
+            } else {
+                alert(await res.text());
+            }
+        }
+    }, 2000)
+    onMount(() => {
+        check();
     });
     const add = () => {
         if(!(data.datas.at(-1)?.subject && data.datas.at(-1)?.course && data.datas.at(-1)?.homework)) {
@@ -31,7 +50,12 @@
             alert('과목, 코스, 숙제 부분을 채워주세요.');
             return;
         }
+        if(text !== 'READY'){
+            alert('아직 준비되지 않았습니다.');
+            return;
+        }
         try{
+            text = 'QUEUED';
             const res = await fetch(location.href, {
                 method:'POST',
                 body:JSON.stringify({
@@ -45,6 +69,7 @@
         }
     }
 </script>
+<h1>{text}</h1>
 <select on:input={e => {
     if(!browser) return;
     window.open(e.currentTarget.value, '_blank');
@@ -101,16 +126,34 @@
             <td colspan="6"><button on:click={add}>추가</button></td>
         </tr>
         <tr class="button">
-            <td colspan="6"><button on:click={setAll}>적용</button></td>
+            <td colspan="6"><button disabled={text !== 'READY'} on:click={setAll}>적용</button></td>
         </tr>
     </tbody>
 </table>
 <style lang="scss">
+    h1{
+        margin-top: 0;
+    }
     table{
+        table-layout: fixed;
         border-collapse: collapse;
         tr{
-            td{
+            td, th{
                 text-align: center;
+                input{
+                    width:100%;
+                    box-sizing: border-box;
+                    outline: none;
+                }
+                &:nth-child(1){
+                    width:85px;
+                }
+                &:nth-child(n + 2){
+                    width:calc((100% - 155px) / 3);
+                }
+                &:nth-child(n + 5){
+                    width:35px;
+                }
             }
             &.button{
                 button{

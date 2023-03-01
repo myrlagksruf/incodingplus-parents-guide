@@ -40,13 +40,16 @@
             v.sort((a, b) => a.localeCompare(b));
         }
     }
+    let innerWidth = 0;
+    $:isMobile = innerWidth < 769;
 </script>
+<svelte:window bind:innerWidth />
 <main>
     <div class="grid">
         <div class="title">수업 현황</div>
         {#each Object.entries(map).sort((a, b) => OrderClass.getSubjectOrder(a[0]) - OrderClass.getSubjectOrder(b[0])) as [과목명, 과목]}
-            <div class="subject" style="grid-row:span {Object.values(과목).reduce((a, v) => a + v.length + 1, -1)}">
-                {@html 과목명}
+            <div class="subject" style={isMobile ? '' : `grid-row:span ${Object.values(과목).reduce((a, v) => a + v.length + 1, -1)}`}>
+                {@html 과목명}&nbsp;
             </div>
             {#each Object.entries(과목).sort((a, b) => {
                 let indexA = OrderClass.getCourseOrder(a[0]);
@@ -56,7 +59,7 @@
                 }
                 return a[0].localeCompare(b[0]);
             }) as [수업명, 숙제들]}
-                <div class="course" style="grid-row:span {숙제들.length}">
+                <div class="course" style={isMobile ? '' : `grid-row:span ${숙제들.length}`}>
                     {@html 수업명}
                 </div>
                 {#each 숙제들 as 숙제}
@@ -81,12 +84,15 @@
         }
         .subject{
             font-size: 1.25em;
+            text-decoration: solid 5px rgb(75, 130, 195) underline;
+            text-underline-offset: -1.6em;
         }
         .course{
             font-size: 1.05em;
             color:rgb(100, 100, 100);
         }
         .homework{
+            padding-left: 2em;
             font-size: 0.9em;
             color:rgb(100, 130, 150);
         }
@@ -100,6 +106,29 @@
             &:last-child{
                 grid-column: span 3;
                 margin-bottom: 3em;
+            }
+        }
+    }
+
+    @media screen and (max-width: 768px){
+        .grid{
+            grid-template-columns: 1fr;
+            .title{
+                grid-column: span 1;
+            }
+            
+            .homework{
+                padding-left: 1em;
+            }
+            .last{
+                grid-column: span 1;
+                
+                &:has(+ .subject){
+                    grid-column: span 1;
+                }
+                &:last-child{
+                    grid-column: span 1;
+                }
             }
         }
     }
