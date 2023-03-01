@@ -13,7 +13,7 @@ if(process.env.NODE_ENV === 'production'){
 const config = {
 	preprocess:preprocess(),
 	kit: {
-		adapter: adapter({runtime:'nodejs18.x'}),
+		adapter: adapter({runtime:'nodejs18.x', regions:['icn1']}),
 		prerender:{
 			crawl:false,
 			entries,
