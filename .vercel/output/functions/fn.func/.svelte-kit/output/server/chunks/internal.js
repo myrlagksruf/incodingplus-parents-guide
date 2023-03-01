@@ -113,6 +113,7 @@ const options = {
 				margin:0;
 				overflow: hidden;
 				font-family: 'GmarketSans';
+				background-color: #ccc;
 			}
 			@font-face {
 				font-family: 'GmarketSans';
@@ -207,7 +208,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1vaaxks"
+  version_hash: "f2j7qo"
 };
 function get_hooks() {
   return {};

@@ -1,12 +1,11 @@
 <script lang="ts">
-
     import { parse, OrderClass } from "$lib/parse";
     import { name } from "$lib/store";
     import type { PageData } from "./$types";
 
-    export let data:PageData
+    export let data:PageData;
     const map:{[key:string]:{[key:string]:string[]}} = {};
-    $name = (data.info[0].학생이름 ?? '').match(/^[가-힣]+/)?.[0] ?? '';
+    $name = `${(data.info[0].학생이름 ?? '').match(/^[가-힣]+/)?.[0]} 학생` ?? '';
     for(let i of data.info){
         const arr = parse(i);
         let check = data.datas.find(v => 

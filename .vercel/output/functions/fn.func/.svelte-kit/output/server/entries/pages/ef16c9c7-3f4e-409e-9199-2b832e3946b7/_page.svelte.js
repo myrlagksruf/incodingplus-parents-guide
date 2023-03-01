@@ -1,4 +1,5 @@
-import { c as create_ssr_component, d as each, h as add_attribute, e as escape, i as null_to_empty } from "../../../chunks/index2.js";
+import { c as create_ssr_component, d as each, e as escape, h as add_attribute, i as null_to_empty } from "../../../chunks/index2.js";
+import { d as datas } from "../../../chunks/data.js";
 const _page_svelte_svelte_type_style_lang = "";
 const css = {
   code: '@charset "UTF-8";table.svelte-1qaqwvc.svelte-1qaqwvc{border-collapse:collapse}table.svelte-1qaqwvc tr td.svelte-1qaqwvc{text-align:center}table.svelte-1qaqwvc tr.button button.svelte-1qaqwvc{box-sizing:border-box;width:100%;height:100%}table.svelte-1qaqwvc tr.yes.svelte-1qaqwvc{background-color:rgba(255, 0, 0, 0.2)}table.svelte-1qaqwvc tr.yes button.svelte-1qaqwvc::before{content:"✓";color:green}table.svelte-1qaqwvc tr.no button.svelte-1qaqwvc::before{content:"✕";color:red}',
@@ -7,6 +8,7 @@ const css = {
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { data } = $$props;
   let del = [];
+  datas.sort((a, b) => a[1].localeCompare(b[1]));
   data.datas.sort((a, b) => {
     let x = data.parse.find((v) => v[0] === a.user_id) ?? ["all", "모든 학생"];
     let y = data.parse.find((v) => v[0] === b.user_id) ?? ["all", "모든 학생"];
@@ -15,7 +17,10 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if ($$props.data === void 0 && $$bindings.data && data !== void 0)
     $$bindings.data(data);
   $$result.css.add(css);
-  return `<table class="${"svelte-1qaqwvc"}"><tbody><tr><th>학생 이름</th>
+  return `<select><option value="${""}" hidden>학생을 골라주세요</option>${each(datas, ([id, name]) => {
+    return `<option value="${"/" + escape(id, true)}">${escape(name)}</option>`;
+  })}</select>
+<table class="${"svelte-1qaqwvc"}"><tbody><tr><th>학생 이름</th>
             <th>과목</th>
             <th>코스</th>
             <th>숙제</th>

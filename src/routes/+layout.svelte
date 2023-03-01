@@ -8,7 +8,7 @@
     <div class="title">
         <h2>{String(data.year).slice(2)}년 {String(data.month + 1).padStart(2, '0')}월</h2>
         <h1>학부모 안내서</h1>
-        <h2 class="name">{$name} 학생</h2>
+        <h2 class="name">{$name}</h2>
     </div>
     <div class="logo-container">
         <div class="logo"></div>

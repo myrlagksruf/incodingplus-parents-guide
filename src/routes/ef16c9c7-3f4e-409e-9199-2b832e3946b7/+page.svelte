@@ -1,8 +1,10 @@
 <script lang="ts">
     import { browser } from "$app/environment";
     import type { PageData } from "./$types";
+    import datas from '$lib/data.json';
     export let data:PageData;
     let del:[string, string][] = [];
+    datas.sort((a, b) => a[1].localeCompare(b[1]));
     data.datas.sort((a, b) => {
         let x = data.parse.find(v => v[0] === a.user_id) ?? ['all', '모든 학생'] as string[];
         let y = data.parse.find(v => v[0] === b.user_id) ?? ['all', '모든 학생'] as string[];
@@ -43,6 +45,16 @@
         }
     }
 </script>
+<select on:input={e => {
+    if(!browser) return;
+    window.open(e.currentTarget.value, '_blank');
+    e.currentTarget.value = ''
+}}>
+    <option value="" hidden>학생을 골라주세요</option>
+    {#each datas as [id, name]}
+        <option value="/{id}">{name}</option>
+    {/each}
+</select>
 <table>
     <tbody>
         <tr>
