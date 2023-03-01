@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { LayoutData } from './$types';
+    import { name } from '$lib/store';
 
     export let data:LayoutData;
 </script>
@@ -7,6 +8,7 @@
     <div class="title">
         <h2>{String(data.year).slice(2)}년 {String(data.month + 1).padStart(2, '0')}월</h2>
         <h1>학부모 안내서</h1>
+        <h2 class="name">{$name} 학생</h2>
     </div>
     <div class="logo-container">
         <div class="logo"></div>
@@ -22,9 +24,12 @@
         overflow-y: auto;
         height: 100vh;
         .title{
-            padding-top:2em;
+            padding-top:4em;
             padding-bottom:5em;
             display: inline-block;
+            .name{
+                padding-top:0.3em;
+            }
         }
         .logo-container{
             display: flex;

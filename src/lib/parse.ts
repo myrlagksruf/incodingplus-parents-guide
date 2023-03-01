@@ -2,8 +2,7 @@ import type { iHome } from "$lib/pg";
 import json from '$lib/parse.json';
 export class OrderClass{
     private static _subjectOrder:{[key:string]:number} = {
-        'Web<br>Programming':0,
-        'JS':1,
+        '코딩':1,
         '국어':2,
         '수학':3,
         'JS Level Up':4,
@@ -49,7 +48,7 @@ export const parse = (obj: iHome) => {
             /^\[JS Only\] \d{2}\.JS/, (obj) => {
                 const arr = obj.숙제명.match(/^\(JS Only\)\s*\((.+)\)\s*(\d+)\-\d+\.(.+)$/);
                 if (arr) {
-                    return ['JS', arr[1].slice(3), `${arr[2]}.${arr[3]}`]
+                    return ['코딩', arr[1].slice(3), `${arr[2]}.${arr[3]}`]
                 }
                 return defaultFunc(obj);
             }], [
@@ -67,7 +66,7 @@ export const parse = (obj: iHome) => {
         ], [
             /^\[(HTML\/CSS|JS 따라해보기|JS Basic|JS Intermediate|JS Level Up|JS Advanced)/, obj => {
                 const arr = defaultFunc(obj);
-                arr[0] = 'Web<br>Programming';
+                arr[0] = '코딩';
                 let index = OrderClass.getHomeworkOrder(obj.수업명);
                 if(index.i !== -1){
                     arr[2] = `${String(index.o ?? 0).padStart(2, '0')}. ${arr[2]}`;

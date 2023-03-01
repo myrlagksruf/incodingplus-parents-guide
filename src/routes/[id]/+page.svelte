@@ -1,13 +1,18 @@
 <script lang="ts">
     import { parse, OrderClass } from "$lib/parse";
+    import { name } from "$lib/store";
     import type { PageData } from "./$types";
 
     export let data:PageData
     const map:{[key:string]:{[key:string]:string[]}} = {};
-
-
+    $name = data.info[0].학생이름;
     for(let i of data.info){
         const arr = parse(i);
+        let check = data.datas.find(v => 
+            v.subject === arr[0] &&
+            v.course === arr[1] &&
+            v.homework === arr[2]);
+        if(check && !check.view) continue;
         if(!map[arr[0]]){
             map[arr[0]] = {};
         }
@@ -18,6 +23,18 @@
             map[arr[0]][arr[1]].push(arr[2]);
         }
     }
+    for(let i of data.datas ?? []){
+        if(!i.view) continue;
+        if(!map[i.subject]){
+            map[i.subject] = {};
+        }
+        if(!map[i.subject][i.course]){
+            map[i.subject][i.course] = [];
+        }
+        if(map[i.subject][i.course].indexOf(i.homework) === -1){
+            map[i.subject][i.course].push(i.homework);
+        }
+    }
     for(let values of Object.values(map)){
         for(let v of Object.values(values)){
             v.sort((a, b) => a.localeCompare(b));
@@ -25,8 +42,8 @@
     }
 </script>
 <main>
-    <h3>수업 현황</h3>
     <div class="grid">
+        <div class="title">수업 현황</div>
         {#each Object.entries(map).sort((a, b) => OrderClass.getSubjectOrder(a[0]) - OrderClass.getSubjectOrder(b[0])) as [과목명, 과목]}
             <div class="subject" style="grid-row:span {Object.values(과목).reduce((a, v) => a + v.length, 0)}">
                 {@html 과목명}
@@ -42,30 +59,41 @@
                 <div class="course" style="grid-row:span {숙제들.length}">
                     {@html 수업명}
                 </div>
-                {#each 숙제들 as 숙제}
-                    <div class="homework">{@html 숙제}</div>
+                {#each 숙제들 as 숙제,ind}
+                    <div class="homework{ind === 숙제들.length - 1 ? ' last' : ''}">{@html 숙제}</div>
                 {/each}
             {/each}
         {/each}
+        <div class="last-thing"></div>
     </div>
 </main>
 <style lang="scss">
-    h3{
-        font-size:2em;
-        padding-left: 2em;
-    }
     .grid{
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        .subject{
-            font-size: 1.75em;
-            text-align: center;
+        padding:0 15px;
+        gap:10px 15px;
+        grid-template-columns: 1fr 2fr 4fr;
+        .title{
+            grid-column: span 3;
+            font-size:2em;
+            padding-bottom: 1em;
         }
-        .course{
+        .subject{
             font-size: 1.25em;
         }
+        .course{
+            font-size: 1.05em;
+            color:rgb(100, 100, 100);
+        }
         .homework{
-            font-size: 1em;
+            font-size: 0.9em;
+            color:rgb(100, 130, 150);
+        }
+        .last-thing{
+            grid-column: span 3;
+        }
+        .last:has(+ .subject, + .last-thing){
+            padding-bottom: 3em;
         }
     }
 </style>

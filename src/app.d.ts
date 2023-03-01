@@ -14,6 +14,8 @@ declare global {
 		readonly VITE_DB_BASE:string;
 		readonly VITE_DB_USER:string;
 		readonly VITE_DB_PASS:string;
+		readonly VITE_AWS_ACCESS:string;
+		readonly VITE_AWS_SECRET:string;
 	}
 }
 
