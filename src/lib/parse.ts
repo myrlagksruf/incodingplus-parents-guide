@@ -17,6 +17,8 @@ export class OrderClass{
         'JS Level Up 2':6,
         'JS Advanced':7,
         'JS Advanced 2':8,
+        'Project Begin':9,
+        'Project Maker':10,
         '진법' : 1,
         '경우의 수': 2,
         '파이썬 입문':1,
@@ -25,7 +27,8 @@ export class OrderClass{
     }
     private static _subjectToComment:{[key:string]:string[]} = {
         '코딩':['입시'],
-        '국어':['독서', '국어']
+        '국어':['독서', '국어'],
+        '수학':['수학']
     }
 
     private static _homeworkOrder:{[key:string]:{i:number,p?:number,n?:number;o?:number}} = json;
@@ -89,7 +92,7 @@ export const parse = (obj: iHome) => {
                 return defaultFunc(obj);
             }
         ], [
-            /^\[(HTML\/CSS|JS 따라해보기|JS Basic|JS Intermediate|JS Level Up|JS Advanced|파이썬)/, obj => {
+            /^\[(HTML\/CSS|JS 따라해보기|JS Basic|JS Intermediate|JS Level Up|JS Advanced|파이썬|Project)/, obj => {
                 const arr = defaultFunc(obj);
                 arr[0] = '코딩';
                 let index = OrderClass.getHomeworkOrder(obj.수업명);

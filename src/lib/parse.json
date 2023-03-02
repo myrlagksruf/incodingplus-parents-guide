@@ -661,7 +661,44 @@
     "[JS Advanced 2] 레벨 업 평가": {
         "i": 148,
         "p": 147,
+        "n": 149,
         "o": 5
+    },
+    "[Project Begin] Git & Github":{
+        "p":148,
+        "i":149,
+        "n":150,
+        "o":1
+    }, 
+    "[Project Begin] TS Object Key & Value":{
+        "p":149,
+        "i":150,
+        "n":151,
+        "o":2
+    },
+    "[Project Begin] Typescript":{
+        "p":150,
+        "i":151,
+        "n":152,
+        "o":3
+    },
+    "[Project Maker] AJAX / 레벨업 평가":{
+        "p":151,
+        "i":152,
+        "n":153,
+        "o":1
+    },
+    "[Project Maker] Event Advanced":{
+        "p":152,
+        "i":153,
+        "n":154,
+        "o":2
+    },
+    "[Project Maker] Promise & Examples":{
+        "p":153,
+        "i":154,
+        "n":155,
+        "o":3
     },
     "[파이썬 입문] Environment Settings": {
         "i": 250,

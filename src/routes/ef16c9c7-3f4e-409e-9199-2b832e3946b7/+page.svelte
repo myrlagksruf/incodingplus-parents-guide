@@ -30,8 +30,8 @@
         check();
     });
     const add = () => {
-        if(!(data.datas.at(-1)?.subject && data.datas.at(-1)?.course && data.datas.at(-1)?.homework)) {
-            alert('과목, 코스, 숙제 부분을 채워주세요.');
+        if(!(data.datas.at(-1)?.subject && data.datas.at(-1)?.course)) {
+            alert('과목, 코스 부분을 채워주세요.');
             return;
         }
         data.datas = [...data.datas, {
@@ -43,17 +43,13 @@
             view:true,
         }];
     }
-
     const setAll = async () => {
         if(!browser) return;
-        if(!(data.datas.at(-1)?.subject && data.datas.at(-1)?.course && data.datas.at(-1)?.homework)) {
-            alert('과목, 코스, 숙제 부분을 채워주세요.');
+        if(!(data.datas.at(-1)?.subject && data.datas.at(-1)?.course)) {
+            alert('과목, 코스 부분을 채워주세요.');
             return;
         }
-        if(text !== 'READY'){
-            alert('아직 준비되지 않았습니다.');
-            return;
-        }
+        
         try{
             text = 'QUEUED';
             const res = await fetch(location.href, {
@@ -68,18 +64,49 @@
             alert(String(err));
         }
     }
+
+    const redeploy = async () => {
+        if(!browser) return;
+        let checkFirst = confirm('정말 페이지 만들기를 하시겠습니까?\n(시간이 오래 걸립니다.)');
+        if(!checkFirst) return;
+        if(text !== 'READY'){
+            alert('아직 준비되지 않았습니다.');
+            return;
+        }
+        try{
+            text = 'QUEUED';
+            const res = await fetch(location.href, {
+                method:'PATCH'
+            })
+            check();
+        } catch(err){
+            alert(String(err));
+        }
+    }
 </script>
 <h1>{text}</h1>
-<select on:input={e => {
-    if(!browser) return;
-    window.open(e.currentTarget.value, '_blank');
-    e.currentTarget.value = ''
-}}>
-    <option value="" hidden>학생을 골라주세요</option>
-    {#each datas as [id, name]}
-        <option value="/{id}">{name}</option>
-    {/each}
-</select>
+<div>
+    <select on:input={e => {
+        if(!browser) return;
+        window.open(e.currentTarget.value, '_blank');
+        e.currentTarget.value = ''
+    }}>
+        <option value="" hidden>결과 페이지 보기</option>
+        {#each datas as [id, name]}
+            <option value="/{id}">{name}</option>
+        {/each}
+    </select>
+    <select on:input={e => {
+        if(!browser) return;
+        window.open(e.currentTarget.value, '_blank');
+        e.currentTarget.value = ''
+    }}>
+        <option value="" hidden>미리보기 페이지 보기</option>
+        {#each datas as [id, name]}
+            <option value="/{id}/edit">{name}</option>
+        {/each}
+    </select>
+</div>
 <table>
     <tbody>
         <tr>
@@ -126,13 +153,19 @@
             <td colspan="6"><button on:click={add}>추가</button></td>
         </tr>
         <tr class="button">
-            <td colspan="6"><button disabled={text !== 'READY'} on:click={setAll}>적용</button></td>
+            <td colspan="6"><button on:click={setAll}>적용</button></td>
+        </tr>
+        <tr class="button">
+            <td colspan="6"><button disabled={text !== 'READY'} on:click={redeploy}>페이지 만들기</button></td>
         </tr>
     </tbody>
 </table>
 <style lang="scss">
     h1{
         margin-top: 0;
+    }
+    select{
+        display: inline-block;
     }
     table{
         table-layout: fixed;
