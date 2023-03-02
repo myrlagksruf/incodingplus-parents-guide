@@ -115,6 +115,7 @@
                 box-sizing: border-box;
                 max-width: 768px;
                 padding:1em;
+                font-size: .85em;
                 padding-bottom: 3em;
                 div{
                     padding:2em;
