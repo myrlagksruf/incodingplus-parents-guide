@@ -26,7 +26,7 @@ export class OrderClass{
         '파이썬':3,
     }
     private static _subjectToComment:{[key:string]:string[]} = {
-        '코딩':['입시'],
+        '코딩':['입시', '코딩'],
         '국어':['독서', '국어'],
         '수학':['수학']
     }
