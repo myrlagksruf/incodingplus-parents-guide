@@ -67,6 +67,18 @@
                 {/each}
                 <div class="last"></div>
             {/each}
+            {@const comments = OrderClass.parseComment(data.comment, 과목명)}
+            {#if comments.length}
+                <div class="last comment">
+                    <div>
+                        {#each comments as 코멘트}
+                            {@const 코멘트Arr = 코멘트.코멘트.split('\n')}
+                            <span>[{코멘트.과목}]<br>{@html 코멘트Arr.slice(1).join('<br>')}</span>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+            <!-- <div class="last-thing"></div> -->
         {/each}
     </div>
 </main>
@@ -98,6 +110,20 @@
         }
         .last{
             grid-column: span 2;
+            &.comment{
+                box-sizing: border-box;
+                max-width: 768px;
+                padding:1em;
+                padding-bottom: 3em;
+                div{
+                    padding:2em;
+                    span{
+                        display: block;
+                    }
+                    background-color: #ddd;
+                    border-radius: 30px;
+                }
+            }
             &:has(+ .subject){
                 grid-column: span 3;
                 margin: 1.5em 0;
@@ -105,7 +131,7 @@
             }
             &:last-child{
                 grid-column: span 3;
-                margin-bottom: 3em;
+                margin-bottom: 6em;
             }
         }
     }

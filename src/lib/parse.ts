@@ -1,14 +1,10 @@
-import type { iHome } from "$lib/pg";
+import type { iComment, iHome } from "$lib/pg";
 import json from '$lib/parse.json';
 export class OrderClass{
     private static _subjectOrder:{[key:string]:number} = {
         '코딩':1,
         '국어':2,
         '수학':3,
-        'JS Level Up':4,
-        'JS Level Up 2':5,
-        'JS Advanced':6,
-        'JS Advanced 2':7,
     };
 
     private static _courseOrder:{[key:string]:number} = {
@@ -17,11 +13,19 @@ export class OrderClass{
         'JS 따라해보기':2,
         'JS Basic':3,
         'JS Intermediate':4,
+        'JS Level Up':5,
+        'JS Level Up 2':6,
+        'JS Advanced':7,
+        'JS Advanced 2':8,
         '진법' : 1,
         '경우의 수': 2,
         '파이썬 입문':1,
         '파이썬 반복문':2,
         '파이썬':3,
+    }
+    private static _subjectToComment:{[key:string]:string[]} = {
+        '코딩':['입시'],
+        '국어':['독서', '국어']
     }
 
     private static _homeworkOrder:{[key:string]:{i:number,p?:number,n?:number;o?:number}} = json;
@@ -39,6 +43,24 @@ export class OrderClass{
     static getHomeworkOrder(val:string){
         let index = this._homeworkOrder[val] ?? {i:-1};
         return index;
+    }
+    static parseComment(vals:iComment[], 과목:string){
+        let comments = this._subjectToComment[과목];
+        if(!this._subjectToComment[과목]) return [];
+        let result:{
+            과목:string;
+            코멘트:string;
+        }[] = [];
+        for(let i of vals){
+            let mat = i.코멘트.match(/\(([가-힣]+)/);
+            if(!mat || !comments.includes(mat[1])) continue;
+            // if(i.코멘트.split('\n')[0].search(/완[성료]/) === -1) continue;
+            result.push({
+                과목:mat[1],
+                코멘트:i.코멘트
+            });
+        }
+        return result;
     }
 }
 

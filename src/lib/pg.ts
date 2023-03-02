@@ -17,6 +17,12 @@ export interface iHome{
     과목: string;
 };
 
+export interface iComment{
+    아이디:string;
+    학생이름:string;
+    코멘트:string;
+}
+
 
 export const getInfo = async (id:string):Promise<{
     status:true;
@@ -73,3 +79,41 @@ export const getInfo = async (id:string):Promise<{
         }
     }
 }
+
+export const getComment = async (id:string,m:number|string):Promise<{
+    status:true;
+    res:pg.QueryResult<iComment>
+}|{
+    status:false;
+    reason:string;
+}> => {
+    let client:PoolClient|null = null;
+    try{
+        client = await pool.connect();
+        const res = await client.query<iComment>(`
+        select
+            ss.id as 아이디,
+            ss.name as 학생이름,
+            ssm.content as 코멘트
+        from
+            svc_student_memo ssm
+        inner join svc_student ss on
+            ss.id = ssm.user_id
+        where
+            ssm.content like '[학부모안내서] (%,${Number(m)}월총평)%' and 
+            ss.id = '${id}'
+        `);
+        client.release();
+        return {
+            status:true,
+            res
+        }
+    } catch(err){
+        if(client) client.release();
+        console.log(err);
+        return {
+            status:false,
+            reason:String(err),
+        }
+    }
+} 
