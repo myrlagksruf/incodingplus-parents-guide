@@ -28,7 +28,8 @@ export class OrderClass{
     private static _subjectToComment:{[key:string]:string[]} = {
         '코딩':['입시', '코딩'],
         '국어':['독서', '국어'],
-        '수학':['수학']
+        '수학':['수학'],
+        '과학':['과학']
     }
 
     private static _homeworkOrder:{[key:string]:{i:number,p?:number,n?:number;o?:number}} = json;

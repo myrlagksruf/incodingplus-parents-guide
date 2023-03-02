@@ -2,7 +2,8 @@ import {
     AttributeValue,
     DynamoDBClient,
     ExecuteStatementCommand,
-    BatchExecuteStatementCommand
+    BatchExecuteStatementCommand,
+    type BatchExecuteStatementCommandOutput
 } from '@aws-sdk/client-dynamodb';
 import type {
     ExecuteStatementCommandOutput
@@ -58,41 +59,48 @@ export class Dynamo{
         const client = this.getClient;
         let inserts = objs.filter(v => !v.id);
         let updates = objs.filter(v => v.id && !(del.find(t => t[0] === v.id)));
-        const command = new BatchExecuteStatementCommand({
-            Statements:[
-                ...(inserts.map(v => ({
-                    Statement:`insert into "incodingplus-parent" value {'id':?,'user_id':?, 'subject':?, 'course':?, 'homework':?, 'view':?}`,
-                    Parameters:[
-                        { S : v4() },
-                        { S : v.user_id },
-                        { S: v.subject },
-                        { S: v.course },
-                        { S: v.homework },
-                        { BOOL: v.view },
-                    ]
-                }))),
-                ...(updates.map(v => ({
-                    Statement:`update "incodingplus-parent" set "subject"=? set "course"=? set "homework"=? set "view"=? where "id"=? and "user_id"=?`,
-                    Parameters:[
-                        { S: v.subject },
-                        { S: v.course },
-                        { S: v.homework },
-                        { BOOL: v.view },
-                        { S : v.id },
-                        { S : v.user_id },
-                    ]
-                }))),
-                ...(del.map(v => ({
-                    Statement:'delete from "incodingplus-parent" where "id"=? and "user_id"=?',
-                    Parameters:[
-                        { S : v[0] },
-                        { S : v[1] },
-                    ]
-                })))
-            ]
-        });
+        const Statements = [
+            ...(inserts.map(v => ({
+                Statement:`insert into "incodingplus-parent" value {'id':?,'user_id':?, 'subject':?, 'course':?, 'homework':?, 'view':?}`,
+                Parameters:[
+                    { S : v4() },
+                    { S : v.user_id },
+                    { S: v.subject },
+                    { S: v.course },
+                    { S: v.homework },
+                    { BOOL: v.view },
+                ]
+            }))),
+            ...(updates.map(v => ({
+                Statement:`update "incodingplus-parent" set "subject"=? set "course"=? set "homework"=? set "view"=? where "id"=? and "user_id"=?`,
+                Parameters:[
+                    { S: v.subject },
+                    { S: v.course },
+                    { S: v.homework },
+                    { BOOL: v.view },
+                    { S : v.id },
+                    { S : v.user_id },
+                ]
+            }))),
+            ...(del.map(v => ({
+                Statement:'delete from "incodingplus-parent" where "id"=? and "user_id"=?',
+                Parameters:[
+                    { S : v[0] },
+                    { S : v[1] },
+                ]
+            })))
+        ];
+        const commands:BatchExecuteStatementCommand[] = [];
+        for(let i = 0; i < Statements.length; i += 25){
+            commands.push(new BatchExecuteStatementCommand({
+                Statements:Statements.slice(i, i + 25)
+            }));
+        }
         try{
-            const res = await client.send(command);
+            const res:BatchExecuteStatementCommandOutput[] = []
+            for(let command of commands){
+                res.push(await client.send(command));
+            }
             client.destroy();
             return res;
         } catch(err){

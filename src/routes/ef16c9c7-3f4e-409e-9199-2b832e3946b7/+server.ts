@@ -10,6 +10,7 @@ export const POST:RequestHandler = async ({request}) => {
         let result = await Dynamo.setAll(res.datas, res.del);
         return new Response(JSON.stringify(result));
     } catch(err){
+        console.log(err);
         return new Response(String(err), {
             status:500
         });
